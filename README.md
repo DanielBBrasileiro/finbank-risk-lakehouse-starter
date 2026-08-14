@@ -102,6 +102,7 @@ make security-audit       # Full locked dependency set
 make streaming-replay-test
 make dashboard-smoke
 make test-all
+make release-gate           # Full local gate plus locked dependency audit
 make evidence-pack
 ```
 
@@ -156,7 +157,7 @@ FinBank is not a production banking system. It has not been load-tested at banki
 
 Use the [pre-publication test plan](docs/portfolio/pre_linkedin_test_plan.md) and [demo walkthrough](docs/portfolio/demo_script.md) before presenting the release.
 
-Publication materials are versioned with the project: [LinkedIn copy](docs/portfolio/linkedin_post.md), [carousel plan](docs/portfolio/linkedin_carousel.md) and [v1.0.1 release notes](docs/portfolio/release_notes_v1.0.1.md).
+Publication materials are versioned with the project: [LinkedIn copy](docs/portfolio/linkedin_post.md), [carousel plan](docs/portfolio/linkedin_carousel.md) and [v1.0.2 release notes](docs/portfolio/release_notes_v1.0.2.md). The commit-matched [evidence pack](https://github.com/DanielBBrasileiro/finbank-risk-lakehouse/releases/latest/download/evidence.md) is attached to the latest verified release.
 
 ## License
 

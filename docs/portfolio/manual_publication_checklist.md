@@ -5,7 +5,7 @@ These actions require the repository owner's GitHub or LinkedIn session and do n
 ## GitHub
 
 - [ ] Pin `finbank-risk-lakehouse` on the GitHub profile.
-- [ ] Confirm that `v1.0.1-portfolio` is shown as the latest release.
+- [ ] Confirm that `v1.0.2-portfolio` is shown as the latest release.
 - [ ] Confirm that the README architecture SVG and dashboard screenshot render correctly while signed out.
 
 ## LinkedIn
@@ -22,5 +22,4 @@ These actions require the repository owner's GitHub or LinkedIn session and do n
 2. Architecture overview.
 3. Credit-risk dashboard.
 4. dbt lineage.
-5. GitHub Actions summary.
-
+5. Copilot governance and audit controls.

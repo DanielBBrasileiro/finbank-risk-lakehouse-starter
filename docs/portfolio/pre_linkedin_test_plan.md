@@ -37,8 +37,7 @@ Pass criteria:
 ```bash
 make clean-demo
 AI_DEMO_MODE=1 DB_TARGET=duckdb make demo-local
-make test-all
-make security-audit
+make release-gate
 make evidence-pack
 ```
 
@@ -81,7 +80,7 @@ Confirm that primary keys survive loading, relationship tests pass and the read-
 Publish only when:
 
 - CI and CodeQL are green on `main`.
-- The protected `main` branch is clean and tagged `v1.0.1-portfolio`.
+- The protected `main` branch is clean and tagged `v1.0.2-portfolio`.
 - The repository description, topics, license, screenshots and release are visible.
 - The LinkedIn text makes no production-scale, real-data or deployed-cloud claim.
 

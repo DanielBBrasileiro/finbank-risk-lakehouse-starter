@@ -44,13 +44,28 @@ def test_duckdb_dbt_target_is_serial_for_stable_ci() -> None:
     assert duckdb["threads"] == 1
 
 
-def test_release_metadata_matches_v1_0_1_scope() -> None:
-    project = tomllib.loads((PROJECT_ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+def test_release_metadata_matches_v1_0_2_scope() -> None:
+    metadata = tomllib.loads((PROJECT_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    project = metadata["project"]
 
-    assert project["version"] == "1.0.1"
+    assert project["version"] == "1.0.2"
     assert project["description"] == (
         "A local-first banking risk data platform with tested analytical products and controlled data access."
     )
+
+    assert metadata["tool"]["uv"]["constraint-dependencies"] == [
+        "cryptography>=50.0.0",
+        "gitpython>=3.1.58",
+        "h2>=4.4.1",
+    ]
+
+
+def test_release_gate_includes_quality_and_security() -> None:
+    makefile = (PROJECT_ROOT / "Makefile").read_text(encoding="utf-8")
+
+    assert "release-gate: test-all security-audit" in makefile
+    assert "SQLFLUFF ?= $(PROJECT_ROOT)/.venv/bin/sqlfluff" in makefile
+    assert "$(SQLFLUFF) lint models tests" in makefile
 
 
 def test_env_example_has_unique_runtime_variables() -> None:
