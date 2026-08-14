@@ -5,7 +5,7 @@
 ```bash
 make doctor
 AI_DEMO_MODE=1 DB_TARGET=duckdb make demo-local
-make test-all
+make release-gate
 make evidence-pack
 DB_TARGET=duckdb make run-dashboard
 ```

@@ -20,7 +20,7 @@ Some of the engineering decisions behind it:
 
 The repository also includes automated checks for Python, Rust, dbt, DuckDB, PostgreSQL, Airflow, Terraform, dependency security and CodeQL.
 
-Final release validation: 82 Python tests passed with 70.68% source coverage, 2 Rust tests passed, and 78 dbt checks completed (62 passed tests, 14 successful resources and 2 no-op exposures).
+Final release validation: 84 Python tests passed with 70.68% source coverage, 2 Rust tests passed, and 78 dbt checks completed (62 passed tests, 14 successful resources and 2 no-op exposures). The complete locked environment reported no known vulnerabilities at publication time.
 
 The default workflow uses synthetic data and runs locally without paid cloud services. AWS, Databricks and Snowflake are documented as evolution paths rather than deployed environments.
 
@@ -52,7 +52,7 @@ Algumas decisões de engenharia do projeto:
 
 O repositório também inclui verificações automatizadas para Python, Rust, dbt, DuckDB, PostgreSQL, Airflow, Terraform, segurança de dependências e CodeQL.
 
-Validação final da release: 82 testes Python aprovados, cobertura de código-fonte de 70,68%, 2 testes Rust aprovados e 78 verificações dbt concluídas (62 testes aprovados, 14 recursos executados com sucesso e 2 exposições sem operação).
+Validação final da release: 84 testes Python aprovados, cobertura de código-fonte de 70,68%, 2 testes Rust aprovados e 78 verificações dbt concluídas (62 testes aprovados, 14 recursos executados com sucesso e 2 exposições sem operação). O ambiente completo travado não apresentou vulnerabilidades conhecidas no momento da publicação.
 
 O fluxo padrão usa dados sintéticos e roda localmente sem serviços cloud pagos. AWS, Databricks e Snowflake estão documentados como caminhos de evolução, não como ambientes implantados.
 
@@ -77,16 +77,17 @@ Repository: https://github.com/DanielBBrasileiro/finbank-risk-lakehouse
 ## Publication Notes
 
 - Repository: https://github.com/DanielBBrasileiro/finbank-risk-lakehouse
-- Release: https://github.com/DanielBBrasileiro/finbank-risk-lakehouse/releases/tag/v1.0.1-portfolio
-- Release commit: target of `v1.0.1-portfolio`; the exact SHA is included in the attached evidence pack.
-- Tag: `v1.0.1-portfolio`
-- Validation date (UTC): `2026-07-21`
-- Python tests: `82` passed
+- Release: https://github.com/DanielBBrasileiro/finbank-risk-lakehouse/releases/tag/v1.0.2-portfolio
+- Release commit: target of `v1.0.2-portfolio`; the exact SHA is included in the attached evidence pack.
+- Tag: `v1.0.2-portfolio`
+- Validation date (UTC): `2026-08-14`
+- Python tests: `84` passed
 - Python coverage: `70.68%`
 - Rust tests: `2` passed
 - dbt checks: `78` (`62 pass`, `14 success`, `2 no-op`)
 - Streaming replay: passed
 - Streamlit smoke test: passed
+- Locked dependency audit: no known vulnerabilities found
 - CI: green on the tagged release commit
 - CodeQL: green on the tagged release commit
 - Preferred language: publish the English version and keep the Portuguese version for a follow-up comment or repost.

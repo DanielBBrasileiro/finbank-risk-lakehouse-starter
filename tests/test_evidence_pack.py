@@ -61,11 +61,10 @@ def test_build_evidence_markdown_counts_nested_screenshots(tmp_path: Path) -> No
     (screenshots / "architecture-overview.svg").write_bytes(b"fake")
     (screenshots / "copilot-governance.png").write_bytes(b"fake")
     (screenshots / "dbt-lineage.png").write_bytes(b"fake")
-    (screenshots / "github-actions-release.png").write_bytes(b"fake")
 
     markdown = build_evidence_markdown(project_root=tmp_path)
 
-    assert "portfolio visuals: 5 captured" in markdown
+    assert "portfolio visuals: 4 captured" in markdown
     assert "`docs/portfolio/screenshots/dbt-lineage.png`" in markdown
     assert "Artifact SHA-256" in markdown
     assert "Copilot controls captured" in markdown

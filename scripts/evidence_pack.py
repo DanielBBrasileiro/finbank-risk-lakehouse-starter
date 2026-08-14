@@ -5,6 +5,7 @@ import hashlib
 import json
 import re
 import subprocess
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -18,7 +19,9 @@ def build_evidence_markdown(*, project_root: Path = Path(".")) -> str:
     ci_workflow = project_root / ".github" / "workflows" / "ci.yml"
     portfolio_root = project_root / "docs" / "portfolio"
     dashboard_screenshots = sorted(
-        [*portfolio_root.rglob("*.png"), *portfolio_root.rglob("*.svg")]
+        path
+        for path in [*portfolio_root.rglob("*.png"), *portfolio_root.rglob("*.svg")]
+        if path.name != "github-actions-release.png"
     )
     screenshot_lines = [
         f"- `{path.relative_to(project_root)}`" for path in dashboard_screenshots
@@ -29,7 +32,6 @@ def build_evidence_markdown(*, project_root: Path = Path(".")) -> str:
         "architecture-overview.svg",
         "dbt-lineage.png",
         "copilot-governance.png",
-        "github-actions-release.png",
     }
     missing_screenshots = sorted(expected_screenshots - captured_names)
     evidence_status_lines = (
@@ -38,7 +40,6 @@ def build_evidence_markdown(*, project_root: Path = Path(".")) -> str:
             "- Architecture rendered from the canonical Mermaid source.",
             "- dbt lineage captured from the generated catalog.",
             "- Copilot controls captured with answered and rejected interactions.",
-            "- GitHub Actions summary captured from a successful main run.",
         ]
         if not missing_screenshots
         else [f"- Missing `{name}`." for name in missing_screenshots]
@@ -138,7 +139,7 @@ def collect_validation_metrics(*, project_root: Path = Path(".")) -> dict:
     commit = _git_output(project_root, ["git", "rev-parse", "HEAD"])
     python_output = _command_output(
         project_root,
-        [str(project_root / ".venv" / "bin" / "python"), "-m", "pytest", "--collect-only", "-q"],
+        [sys.executable, "-m", "pytest", "--collect-only", "-q"],
         timeout=120,
     )
     collected_match = re.search(r"(\d+) tests? collected", python_output)
@@ -147,7 +148,7 @@ def collect_validation_metrics(*, project_root: Path = Path(".")) -> dict:
 
     coverage_output = _command_output(
         project_root,
-        [str(project_root / ".venv" / "bin" / "python"), "-m", "coverage", "json", "-o", "-"],
+        [sys.executable, "-m", "coverage", "json", "-o", "-"],
     )
     try:
         coverage_percent = json.loads(coverage_output)["totals"]["percent_covered"]

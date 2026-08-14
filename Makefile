@@ -1,11 +1,19 @@
-.PHONY: up down install bootstrap doctor clean-demo generate generate-macro-offline generate-cvm-offline publish-bronze build-lakehouse load load-audit validate dbt dbt-parse dbt-docs pipeline pipeline-local demo-local warehouse-local test coverage test-all lint sql-lint security-audit ai-eval dagster run-dashboard dashboard-smoke rust-build rust-test rust-validate streaming-demo streaming-replay-test evidence-pack airflow-test demo
+.PHONY: up down install bootstrap doctor clean-demo generate generate-macro-offline generate-cvm-offline publish-bronze build-lakehouse load load-audit validate dbt dbt-parse dbt-docs pipeline pipeline-local demo-local warehouse-local test coverage test-all release-gate lint sql-lint security-audit ai-eval dagster run-dashboard dashboard-smoke rust-build rust-test rust-validate streaming-demo streaming-replay-test evidence-pack airflow-test demo
 
-PYTHON ?= .venv/bin/python
-DBT ?= .venv/bin/dbt
-RUFF ?= .venv/bin/ruff
-STREAMLIT ?= .venv/bin/streamlit
-DAGSTER ?= .venv/bin/dagster
+PROJECT_ROOT := $(abspath .)
+PYTHON ?= $(PROJECT_ROOT)/.venv/bin/python
+DBT ?= $(PROJECT_ROOT)/.venv/bin/dbt
+RUFF ?= $(PROJECT_ROOT)/.venv/bin/ruff
+SQLFLUFF ?= $(PROJECT_ROOT)/.venv/bin/sqlfluff
+STREAMLIT ?= $(PROJECT_ROOT)/.venv/bin/streamlit
+DAGSTER ?= $(PROJECT_ROOT)/.venv/bin/dagster
 RUST_VALIDATOR ?= src/rust_validator/target/release/finbank-validator
+
+# Keep NumPy/BLAS imports deterministic on macOS while allowing explicit overrides.
+OPENBLAS_NUM_THREADS ?= 1
+VECLIB_MAXIMUM_THREADS ?= 1
+export OPENBLAS_NUM_THREADS
+export VECLIB_MAXIMUM_THREADS
 
 up:
 	docker compose up -d
@@ -58,13 +66,13 @@ load-audit:
 validate: rust-build rust-validate
 
 dbt:
-	cd dbt && DBT_SEND_ANONYMOUS_USAGE_STATS=false DBT_TARGET=$$(if [ "$(DB_TARGET)" = "duckdb" ] || [ "$(DBT_TARGET)" = "duckdb" ]; then echo "duckdb"; else echo "$${DBT_TARGET:-dev}"; fi) ../$(DBT) build --profiles-dir .
+	cd dbt && DBT_SEND_ANONYMOUS_USAGE_STATS=false DBT_TARGET=$$(if [ "$(DB_TARGET)" = "duckdb" ] || [ "$(DBT_TARGET)" = "duckdb" ]; then echo "duckdb"; else echo "$${DBT_TARGET:-dev}"; fi) $(DBT) build --profiles-dir .
 
 dbt-parse:
-	cd dbt && DBT_SEND_ANONYMOUS_USAGE_STATS=false ../$(DBT) parse --profiles-dir .
+	cd dbt && DBT_SEND_ANONYMOUS_USAGE_STATS=false $(DBT) parse --profiles-dir .
 
 dbt-docs:
-	cd dbt && DBT_SEND_ANONYMOUS_USAGE_STATS=false ../$(DBT) docs generate --profiles-dir .
+	cd dbt && DBT_SEND_ANONYMOUS_USAGE_STATS=false $(DBT) docs generate --profiles-dir .
 
 pipeline: generate validate publish-bronze load load-audit dbt
 
@@ -93,7 +101,7 @@ lint:
 	$(RUFF) check src dashboards tests scripts orchestration databricks
 
 sql-lint:
-	cd dbt && DBT_SEND_ANONYMOUS_USAGE_STATS=false DBT_TARGET=duckdb ../.venv/bin/sqlfluff lint models tests
+	cd dbt && DBT_SEND_ANONYMOUS_USAGE_STATS=false DBT_TARGET=duckdb $(SQLFLUFF) lint models tests
 
 security-audit:
 	@tmp=$$(mktemp); trap 'rm -f "$$tmp"' EXIT; \
@@ -105,6 +113,8 @@ test-all: coverage lint sql-lint rust-test
 	$(MAKE) streaming-replay-test
 	$(MAKE) dashboard-smoke
 	$(PYTHON) scripts/evidence_pack.py --record-validation
+
+release-gate: test-all security-audit
 
 ai-eval:
 	$(PYTHON) -m src.ai_assistant.eval_runner --eval-file ai/evals/risk_copilot.yml

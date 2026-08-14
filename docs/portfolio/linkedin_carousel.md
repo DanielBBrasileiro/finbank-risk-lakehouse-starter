@@ -52,9 +52,9 @@ Use a 1080 x 1350 px portrait canvas, a white background, dark text and the rest
 
 **Short copy:** Invalid batches are rejected. Source and mart totals are reconciled. Event replay is idempotent. Read-only analytical access is audited. CI and CodeQL verify the release path.
 
-**Recommended visual:** Use five compact proof points with simple check marks, plus a small GitHub Actions crop.
+**Recommended visual:** Use five compact proof points with simple check marks, plus focused dbt lineage and copilot-governance crops. Link to the live GitHub Actions run in the post instead of embedding a screenshot that will become stale.
 
-**Repository assets:** `docs/portfolio/screenshots/github-actions-release.png`, `docs/portfolio/screenshots/dbt-lineage.png`, and `docs/portfolio/screenshots/copilot-governance.png`
+**Repository assets:** `docs/portfolio/screenshots/dbt-lineage.png` and `docs/portfolio/screenshots/copilot-governance.png`
 
 **Suggested word limit:** 40 words.
 
@@ -73,4 +73,3 @@ Use a 1080 x 1350 px portrait canvas, a white background, dark text and the rest
 **Suggested word limit:** 16 words, excluding the URL.
 
 **Do not include:** a required QR code, invented adoption metrics, employer/client logos or claims that the platform processes real customers.
-

@@ -51,10 +51,8 @@ jobs:
       - run: make bootstrap
       - name: Build the complete local demo
         run: AI_DEMO_MODE=1 DB_TARGET=duckdb make demo-local
-      - name: Verify replay idempotency
-        run: make streaming-replay-test
-      - name: Smoke test Streamlit
-        run: make dashboard-smoke
+      - name: Run the consolidated local release gate
+        run: make test-all
       - run: make evidence-pack
       - uses: actions/upload-artifact@v7
         with:

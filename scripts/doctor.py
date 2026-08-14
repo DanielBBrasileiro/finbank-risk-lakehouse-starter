@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-import importlib
+import json
+import os
 import shutil
 import subprocess
 import sys
@@ -15,9 +16,34 @@ class CheckResult:
     critical: bool
 
 
+IMPORT_TIMEOUT_SECONDS = 20
+
+
 def run_import_check(module_name: str, *, critical: bool) -> CheckResult:
+    code = (
+        "import importlib; "
+        f"module = importlib.import_module({json.dumps(module_name)}); "
+        "print(getattr(module, '__version__', 'available'))"
+    )
+    env = os.environ.copy()
+    env.setdefault("OPENBLAS_NUM_THREADS", "1")
+    env.setdefault("VECLIB_MAXIMUM_THREADS", "1")
     try:
-        module = importlib.import_module(module_name)
+        result = subprocess.run(
+            [sys.executable, "-c", code],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=IMPORT_TIMEOUT_SECONDS,
+            env=env,
+        )
+    except subprocess.TimeoutExpired:
+        return CheckResult(
+            name=f"python package: {module_name}",
+            ok=False,
+            detail=f"import timed out after {IMPORT_TIMEOUT_SECONDS}s",
+            critical=critical,
+        )
     except Exception as exc:
         return CheckResult(
             name=f"python package: {module_name}",
@@ -26,8 +52,8 @@ def run_import_check(module_name: str, *, critical: bool) -> CheckResult:
             critical=critical,
         )
 
-    version = getattr(module, "__version__", "available")
-    return CheckResult(name=f"python package: {module_name}", ok=True, detail=str(version), critical=critical)
+    version = result.stdout.strip() or "available"
+    return CheckResult(name=f"python package: {module_name}", ok=True, detail=version, critical=critical)
 
 
 def run_tool_check(tool_name: str, *, critical: bool) -> CheckResult:

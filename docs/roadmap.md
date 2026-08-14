@@ -24,6 +24,14 @@
 - [x] Standardize LinkedIn, CV, carousel and release materials.
 - [x] Publish the validated `v1.0.1-portfolio` tag and release.
 
+## v1.0.2 Verified Security Refresh
+
+- [x] Raise resolver floors for the current `cryptography`, `GitPython` and `h2` advisories.
+- [x] Consolidate the Python security refresh and the compatible Rust lock update.
+- [x] Add a single `make release-gate` target for quality, E2E and dependency security.
+- [x] Make local diagnostics and SQL lint execution portable across clean environments.
+- [x] Generate commit-matched CI evidence instead of relying on a versioned Actions screenshot.
+
 ## Post-v1 Evolution
 
 - [ ] Add scheduled ingestion with source freshness alerts and operational SLIs.
